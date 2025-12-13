@@ -1,0 +1,462 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// USER & AUTHENTICATION
+// ============================================
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  emailVerified DateTime?
+  phone         String?   @unique
+  phoneVerified DateTime?
+  passwordHash  String?
+  name          String?
+  image         String?
+  bio           String?
+  
+  // Location
+  city          String?
+  state         String?
+  zipCode       String?
+  
+  // Verification & Trust
+  idVerified    Boolean   @default(false)
+  stripeAccountId String?
+  stripeCustomerId String?
+  
+  // Subscription
+  subscriptionTier SubscriptionTier @default(FREE)
+  subscriptionExpiresAt DateTime?
+  
+  // Stats
+  rating        Float     @default(0)
+  reviewCount   Int       @default(0)
+  
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  // Relations
+  listings      Listing[]
+  buyerTransactions Transaction[] @relation("BuyerTransactions")
+  sellerTransactions Transaction[] @relation("SellerTransactions")
+  sentOffers    Offer[]   @relation("SentOffers")
+  receivedOffers Offer[]  @relation("ReceivedOffers")
+  reviewsGiven  Review[]  @relation("ReviewsGiven")
+  reviewsReceived Review[] @relation("ReviewsReceived")
+  sentMessages  Message[] @relation("SentMessages")
+  receivedMessages Message[] @relation("ReceivedMessages")
+  favorites     Favorite[]
+  accounts      Account[]
+  sessions      Session[]
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// ============================================
+// LISTINGS
+// ============================================
+
+model Listing {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Basic Info
+  title       String
+  description String   @db.Text
+  category    Category
+  
+  // Type & Condition
+  listingType ListingType
+  condition   ItemCondition
+  
+  // Sale-specific pricing
+  salePrice       Decimal?  @db.Decimal(10, 2)
+  acceptsOffers   Boolean   @default(false)
+  
+  // Rent-specific pricing
+  rentDailyRate   Decimal?  @db.Decimal(10, 2)
+  rentWeeklyRate  Decimal?  @db.Decimal(10, 2)
+  rentWeekendRate Decimal?  @db.Decimal(10, 2)
+  minRentalDays   Int?
+  securityDeposit Decimal?  @db.Decimal(10, 2)
+  
+  // Location
+  latitude    Float?
+  longitude   Float?
+  city        String
+  state       String
+  zipCode     String
+  showExactAddress Boolean @default(false)
+  address     String?
+  
+  // Logistics
+  pickupAvailable   Boolean @default(true)
+  deliveryAvailable Boolean @default(false)
+  deliveryRadius    Int?    // miles
+  deliveryFee       Decimal? @db.Decimal(10, 2)
+  shippingAvailable Boolean @default(false)
+  
+  // Status & Quantity
+  status            ListingStatus @default(ACTIVE)
+  quantityAvailable Int           @default(1)
+  
+  // Images
+  images      ListingImage[]
+  
+  // Timestamps
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  // Relations
+  transactions    Transaction[]
+  rentalCalendar  RentalCalendar[]
+  offers          Offer[]
+  favorites       Favorite[]
+  reviews         Review[]
+  messages        Message[]
+  
+  @@index([userId])
+  @@index([category])
+  @@index([listingType])
+  @@index([status])
+  @@index([city, state])
+}
+
+model ListingImage {
+  id        String   @id @default(cuid())
+  listingId String
+  listing   Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  url       String
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  
+  @@index([listingId])
+}
+
+// ============================================
+// TRANSACTIONS
+// ============================================
+
+model Transaction {
+  id          String   @id @default(cuid())
+  listingId   String
+  listing     Listing  @relation(fields: [listingId], references: [id])
+  buyerId     String
+  buyer       User     @relation("BuyerTransactions", fields: [buyerId], references: [id])
+  sellerId    String
+  seller      User     @relation("SellerTransactions", fields: [sellerId], references: [id])
+  
+  transactionType TransactionType
+  
+  // Amounts
+  itemPrice       Decimal  @db.Decimal(10, 2)
+  serviceFee      Decimal  @db.Decimal(10, 2)
+  deliveryFee     Decimal  @db.Decimal(10, 2) @default(0)
+  insuranceFee    Decimal  @db.Decimal(10, 2) @default(0)
+  totalAmount     Decimal  @db.Decimal(10, 2)
+  
+  // Rental-specific
+  rentalStartDate DateTime?
+  rentalEndDate   DateTime?
+  securityDeposit Decimal?  @db.Decimal(10, 2)
+  depositReturned Boolean   @default(false)
+  lateFees        Decimal?  @db.Decimal(10, 2)
+  
+  // Status
+  status          TransactionStatus @default(PENDING)
+  
+  // Stripe
+  stripePaymentIntentId String?
+  stripeTransferId      String?
+  
+  // Timestamps
+  createdAt   DateTime  @default(now())
+  completedAt DateTime?
+  
+  // Relations
+  rentalCalendar RentalCalendar[]
+  
+  @@index([listingId])
+  @@index([buyerId])
+  @@index([sellerId])
+  @@index([status])
+}
+
+// ============================================
+// RENTAL CALENDAR
+// ============================================
+
+model RentalCalendar {
+  id            String   @id @default(cuid())
+  listingId     String
+  listing       Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  startDate     DateTime @db.Date
+  endDate       DateTime @db.Date
+  status        CalendarStatus
+  transactionId String?
+  transaction   Transaction? @relation(fields: [transactionId], references: [id])
+  
+  createdAt     DateTime @default(now())
+  
+  @@index([listingId])
+  @@index([startDate, endDate])
+}
+
+// ============================================
+// OFFERS (Price Negotiation)
+// ============================================
+
+model Offer {
+  id          String   @id @default(cuid())
+  listingId   String
+  listing     Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  buyerId     String
+  buyer       User     @relation("SentOffers", fields: [buyerId], references: [id])
+  sellerId    String
+  seller      User     @relation("ReceivedOffers", fields: [sellerId], references: [id])
+  
+  offerAmount Decimal  @db.Decimal(10, 2)
+  message     String?  @db.Text
+  
+  status      OfferStatus @default(PENDING)
+  expiresAt   DateTime
+  
+  // Counter offer reference
+  counterOfferId String?
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@index([listingId])
+  @@index([buyerId])
+  @@index([sellerId])
+}
+
+// ============================================
+// REVIEWS
+// ============================================
+
+model Review {
+  id          String   @id @default(cuid())
+  listingId   String?
+  listing     Listing? @relation(fields: [listingId], references: [id])
+  reviewerId  String
+  reviewer    User     @relation("ReviewsGiven", fields: [reviewerId], references: [id])
+  revieweeId  String
+  reviewee    User     @relation("ReviewsReceived", fields: [revieweeId], references: [id])
+  
+  rating      Int      // 1-5
+  comment     String?  @db.Text
+  
+  // What is being reviewed
+  reviewType  ReviewType
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@index([revieweeId])
+  @@index([listingId])
+}
+
+// ============================================
+// MESSAGING
+// ============================================
+
+model Message {
+  id          String   @id @default(cuid())
+  senderId    String
+  sender      User     @relation("SentMessages", fields: [senderId], references: [id])
+  receiverId  String
+  receiver    User     @relation("ReceivedMessages", fields: [receiverId], references: [id])
+  listingId   String?
+  listing     Listing? @relation(fields: [listingId], references: [id])
+  
+  content     String   @db.Text
+  read        Boolean  @default(false)
+  
+  createdAt   DateTime @default(now())
+  
+  @@index([senderId])
+  @@index([receiverId])
+  @@index([listingId])
+}
+
+// ============================================
+// FAVORITES
+// ============================================
+
+model Favorite {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  listingId String
+  listing   Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  
+  createdAt DateTime @default(now())
+  
+  @@unique([userId, listingId])
+  @@index([userId])
+}
+
+// ============================================
+// ENUMS
+// ============================================
+
+enum SubscriptionTier {
+  FREE
+  SELLER
+  PRO
+  BUSINESS
+}
+
+enum ListingType {
+  SALE
+  RENT
+  BOTH
+}
+
+enum ItemCondition {
+  NEW
+  LIKE_NEW
+  GOOD
+  FAIR
+}
+
+enum ListingStatus {
+  ACTIVE
+  RENTED
+  SOLD
+  INACTIVE
+}
+
+enum TransactionType {
+  SALE
+  RENTAL
+}
+
+enum TransactionStatus {
+  PENDING
+  PAID
+  IN_PROGRESS
+  COMPLETED
+  DISPUTED
+  CANCELLED
+}
+
+enum CalendarStatus {
+  AVAILABLE
+  BOOKED
+  BLOCKED
+}
+
+enum OfferStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  COUNTERED
+  EXPIRED
+}
+
+enum ReviewType {
+  BUYER_TO_SELLER
+  SELLER_TO_BUYER
+  RENTER_TO_OWNER
+  OWNER_TO_RENTER
+}
+
+enum Category {
+  // Decor
+  DECOR_CENTERPIECES
+  DECOR_BACKDROPS
+  DECOR_ARCHES
+  DECOR_LIGHTING
+  DECOR_FLOWERS
+  DECOR_SIGNAGE
+  DECOR_OTHER
+  
+  // Furniture
+  FURNITURE_CHAIRS
+  FURNITURE_TABLES
+  FURNITURE_LOUNGE
+  FURNITURE_OTHER
+  
+  // Equipment
+  EQUIPMENT_AUDIO
+  EQUIPMENT_VISUAL
+  EQUIPMENT_PHOTO_BOOTH
+  EQUIPMENT_DJ
+  EQUIPMENT_OTHER
+  
+  // Structures
+  STRUCTURES_TENTS
+  STRUCTURES_CANOPIES
+  STRUCTURES_DANCE_FLOOR
+  STRUCTURES_STAGE
+  STRUCTURES_OTHER
+  
+  // Textiles
+  TEXTILES_LINENS
+  TEXTILES_TABLECLOTHS
+  TEXTILES_CHAIR_COVERS
+  TEXTILES_DRAPING
+  TEXTILES_OTHER
+  
+  // Party Supplies
+  SUPPLIES_TABLEWARE
+  SUPPLIES_BALLOONS
+  SUPPLIES_INFLATABLES
+  SUPPLIES_GAMES
+  SUPPLIES_OTHER
+  
+  // Services
+  SERVICES_DJ
+  SERVICES_PHOTOGRAPHY
+  SERVICES_CATERING
+  SERVICES_PLANNING
+  SERVICES_OTHER
+}
