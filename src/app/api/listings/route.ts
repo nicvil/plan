@@ -29,12 +29,17 @@ export async function GET(request: NextRequest) {
     const where: Record<string, unknown> = {
       status: 'ACTIVE',
     }
+    
+    // We use AND to combine multiple conditions
+    const andConditions: Record<string, unknown>[] = []
 
     if (params.query) {
-      where.OR = [
-        { title: { contains: params.query, mode: 'insensitive' } },
-        { description: { contains: params.query, mode: 'insensitive' } },
-      ]
+      andConditions.push({
+        OR: [
+          { title: { contains: params.query, mode: 'insensitive' } },
+          { description: { contains: params.query, mode: 'insensitive' } },
+        ]
+      })
     }
 
     if (params.category) {
@@ -63,20 +68,27 @@ export async function GET(request: NextRequest) {
 
     // Price filtering (apply to sale price or daily rent rate)
     if (params.minPrice || params.maxPrice) {
-      where.OR = [
-        {
-          salePrice: {
-            ...(params.minPrice && { gte: params.minPrice }),
-            ...(params.maxPrice && { lte: params.maxPrice }),
+      andConditions.push({
+        OR: [
+          {
+            salePrice: {
+              ...(params.minPrice && { gte: params.minPrice }),
+              ...(params.maxPrice && { lte: params.maxPrice }),
+            },
           },
-        },
-        {
-          rentDailyRate: {
-            ...(params.minPrice && { gte: params.minPrice }),
-            ...(params.maxPrice && { lte: params.maxPrice }),
+          {
+            rentDailyRate: {
+              ...(params.minPrice && { gte: params.minPrice }),
+              ...(params.maxPrice && { lte: params.maxPrice }),
+            },
           },
-        },
-      ]
+        ]
+      })
+    }
+    
+    // Add AND conditions if any exist
+    if (andConditions.length > 0) {
+      where.AND = andConditions
     }
 
     // Build orderBy
@@ -205,8 +217,14 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // TODO: Replace with actual user ID from session
-    const userId = 'placeholder-user-id'
+    // TODO: Replace with actual user ID from authentication session
+    // Implementation requires NextAuth.js setup:
+    // const session = await getServerSession(authOptions)
+    // if (!session?.user?.id) {
+    //   return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    // }
+    // const userId = session.user.id
+    const userId = 'placeholder-user-id' // FIXME: Remove after implementing auth
 
     const listing = await prisma.listing.create({
       data: {

@@ -69,7 +69,9 @@ export function calculateRentalTotal(params: {
   
   if (isWeekendRental && weekendRate) {
     rateUsed = 'weekend'
-    rate = weekendRate / 3 // Weekend rate is for the whole weekend
+    // Weekend rate is a flat rate for Friday-Sunday (3 days total)
+    // We divide by 3 to get the effective daily rate for calculation
+    rate = weekendRate / 3
   } else if (days >= 7 && weeklyRate) {
     rateUsed = 'weekly'
     const weeks = Math.floor(days / 7)
