@@ -7,7 +7,16 @@
     "lint": "turbo lint",
     "test": "turbo test",
     "clean": "turbo clean",
-    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\""
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down",
+    "db:generate": "pnpm --filter @linkiq/web db:generate",
+    "db:migrate": "pnpm --filter @linkiq/web db:migrate",
+    "db:push": "pnpm --filter @linkiq/web db:push",
+    "db:seed": "pnpm --filter @linkiq/web db:seed",
+    "db:studio": "pnpm --filter @linkiq/web db:studio",
+    "db:reset": "pnpm --filter @linkiq/web db:reset",
+    "setup": "pnpm install && pnpm db:generate"
   },
   "devDependencies": {
     "@types/node": "^20.11.0",
