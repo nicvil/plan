@@ -4,7 +4,7 @@ Smart link management platform — shorten, track, and optimize your links with 
 
 ## Tech Stack
 
-- **Frontend:** Next.js 14 (App Router), React, Tailwind CSS, shadcn/ui
+- **Frontend:** Next.js 15 (App Router), React, Tailwind CSS, shadcn/ui
 - **Mobile:** React Native, Expo, Expo Router
 - **Backend:** Next.js API Routes
 - **Database:** PostgreSQL, Prisma ORM
