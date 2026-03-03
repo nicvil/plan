@@ -1,0 +1,15 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": ["TEAMID.app.linkiq.ios"],
+        "components": [
+          { "/": "/invite/*", "comment": "Workspace invites" },
+          { "/": "/reset-password/*", "comment": "Password resets" },
+          { "/": "/links/*", "comment": "Link details" },
+          { "/": "/dashboard", "comment": "Dashboard" }
+        ]
+      }
+    ]
+  }
+}
