@@ -1,12 +1,12 @@
 # LinkIQ
 
-AI-powered LinkedIn content management platform for creating, scheduling, and optimizing LinkedIn posts with data-driven insights.
+Smart link management platform — shorten, track, and optimize your links with QR codes, UTM parameters, and powerful analytics.
 
 ## Tech Stack
 
-- **Frontend:** Next.js 14 (App Router), React, Tailwind CSS
-- **Mobile:** React Native, Expo
-- **Backend:** Next.js API Routes, tRPC
+- **Frontend:** Next.js 14 (App Router), React, Tailwind CSS, shadcn/ui
+- **Mobile:** React Native, Expo, Expo Router
+- **Backend:** Next.js API Routes
 - **Database:** PostgreSQL, Prisma ORM
 - **Cache:** Redis
 - **Auth:** NextAuth.js
@@ -61,10 +61,9 @@ linkiq/
 │   ├── web/          # Next.js web application
 │   └── mobile/       # React Native / Expo mobile app
 ├── packages/
-│   ├── ui/           # Shared UI components
-│   ├── db/           # Database schema and client (Prisma)
-│   ├── api/          # Shared API logic (tRPC)
-│   └── config/       # Shared configuration
+│   ├── shared/       # Shared types, Zod schemas, constants, utilities
+│   ├── ui-web/       # Web component library
+│   └── ui-mobile/    # Mobile component library
 ├── turbo.json        # Turborepo configuration
 ├── pnpm-workspace.yaml
 └── package.json
