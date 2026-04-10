@@ -5,7 +5,7 @@ import { Heart, Bookmark, MapPin, Star } from "lucide-react";
 import {
   Card,
   CardContent,
-  CardDescription,
+
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";

@@ -65,6 +65,7 @@ export default function EditBusinessPage() {
     },
   });
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const onSubmit = async (data: BusinessFormData) => {
     setIsLoading(true);
     // Simulate save

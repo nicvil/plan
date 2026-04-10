@@ -39,6 +39,7 @@ export default function ForgotPasswordPage() {
     defaultValues: { email: "" },
   });
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async function onSubmit(_data: ForgotPasswordValues) {
     setIsLoading(true);
 

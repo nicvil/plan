@@ -63,6 +63,7 @@ export default function ManageReviewsPage() {
       ? allReviews
       : allReviews.filter((r) => r.rating === parseInt(filter));
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleSubmitReply = (reviewId: string) => {
     // Placeholder: would save reply
     setReplyingTo(null);
