@@ -1,0 +1,239 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─── Enums ───────────────────────────────────────────────────────────────────
+
+enum UserRole {
+  USER
+  BUSINESS_OWNER
+  ADMIN
+}
+
+enum BusinessPlan {
+  FREE
+  BASIC
+  PREMIUM
+  FEATURED
+}
+
+enum SubscriptionPlan {
+  BASIC
+  PREMIUM
+  FEATURED
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  CANCELLED
+  PAST_DUE
+}
+
+// ─── NextAuth Models ─────────────────────────────────────────────────────────
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// ─── User ────────────────────────────────────────────────────────────────────
+
+model User {
+  id             String          @id @default(cuid())
+  name           String?
+  email          String?         @unique
+  emailVerified  DateTime?
+  image          String?
+  password       String?
+  role           UserRole        @default(USER)
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  accounts       Account[]
+  sessions       Session[]
+  reviews        Review[]
+  businesses     Business[]
+  savedBusinesses SavedBusiness[]
+}
+
+// ─── Business ────────────────────────────────────────────────────────────────
+
+model Business {
+  id               String          @id @default(cuid())
+  name             String
+  slug             String          @unique
+  description      String?         @db.Text
+  shortDescription String?         @db.VarChar(160)
+  categoryId       String
+  address          String?
+  city             String?
+  state            String?
+  country          String?
+  zipCode          String?
+  latitude         Float?
+  longitude        Float?
+  phone            String?
+  email            String?
+  website          String?
+  socialLinks      Json?
+  hours            Json?
+  logo             String?
+  coverImage       String?
+  ownerId          String
+  plan             BusinessPlan    @default(FREE)
+  planExpiresAt    DateTime?
+  isVerified       Boolean         @default(false)
+  isClaimed        Boolean         @default(false)
+  isActive         Boolean         @default(true)
+  isFeatured       Boolean         @default(false)
+  averageRating    Float           @default(0)
+  totalReviews     Int             @default(0)
+  totalViews       Int             @default(0)
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+
+  category     Category        @relation(fields: [categoryId], references: [id])
+  owner        User            @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  images       BusinessImage[]
+  reviews      Review[]
+  tags         Tag[]
+  events       Event[]
+  subscription Subscription?
+  savedBy      SavedBusiness[]
+}
+
+// ─── Category ────────────────────────────────────────────────────────────────
+
+model Category {
+  id          String     @id @default(cuid())
+  name        String
+  slug        String     @unique
+  icon        String?
+  color       String?
+  description String?
+  businesses  Business[]
+}
+
+// ─── Tag (implicit many-to-many with Business) ──────────────────────────────
+
+model Tag {
+  id         String     @id @default(cuid())
+  name       String     @unique
+  businesses Business[]
+}
+
+// ─── Review ──────────────────────────────────────────────────────────────────
+
+model Review {
+  id             String    @id @default(cuid())
+  rating         Int
+  title          String
+  body           String    @db.Text
+  images         String[]
+  isVerified     Boolean   @default(false)
+  helpful        Int       @default(0)
+  userId         String
+  businessId     String
+  ownerReply     String?   @db.Text
+  ownerRepliedAt DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+}
+
+// ─── BusinessImage ───────────────────────────────────────────────────────────
+
+model BusinessImage {
+  id         String  @id @default(cuid())
+  url        String
+  alt        String?
+  isPrimary  Boolean @default(false)
+  businessId String
+
+  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+}
+
+// ─── SavedBusiness ───────────────────────────────────────────────────────────
+
+model SavedBusiness {
+  id         String   @id @default(cuid())
+  userId     String
+  businessId String
+  createdAt  DateTime @default(now())
+
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, businessId])
+}
+
+// ─── Event ───────────────────────────────────────────────────────────────────
+
+model Event {
+  id          String   @id @default(cuid())
+  title       String
+  description String?  @db.Text
+  startDate   DateTime
+  endDate     DateTime
+  image       String?
+  businessId  String
+  isSponsored Boolean  @default(false)
+  price       Float?
+  ticketUrl   String?
+  createdAt   DateTime @default(now())
+
+  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+}
+
+// ─── Subscription ────────────────────────────────────────────────────────────
+
+model Subscription {
+  id                   String             @id @default(cuid())
+  stripeCustomerId     String             @unique
+  stripeSubscriptionId String             @unique
+  plan                 SubscriptionPlan
+  status               SubscriptionStatus
+  businessId           String             @unique
+  currentPeriodStart   DateTime
+  currentPeriodEnd     DateTime
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+
+  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+}
