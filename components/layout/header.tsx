@@ -113,7 +113,7 @@ export function Header() {
             asChild
             className="text-primary-foreground/80 hover:text-primary-foreground hover:bg-primary-foreground/10"
           >
-            <Link href="/dashboard/saved" aria-label="Favorite">
+            <Link href="/dashboard/saved" aria-label="Salvate">
               <Heart className="h-5 w-5" />
             </Link>
           </Button>

@@ -21,6 +21,7 @@ import {
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Breadcrumbs } from "@/components/layout/breadcrumbs";
 import { SaveButtonSmall } from "@/components/save-button";
+import { cn } from "@/lib/utils";
 
 const listingData: Record<
   string,
@@ -160,7 +161,10 @@ export default function ListingDetailPage({
                 {listing.images.map((img, i) => (
                   <div
                     key={i}
-                    className={`flex-1 aspect-square bg-muted flex items-center justify-center text-2xl rounded-lg cursor-pointer transition-opacity ${i === 0 ? "ring-2 ring-secondary" : "opacity-60 hover:opacity-100"}`}
+                    className={cn(
+                      "flex-1 aspect-square bg-muted flex items-center justify-center text-2xl rounded-lg cursor-pointer transition-opacity",
+                      i === 0 ? "ring-2 ring-secondary" : "opacity-60 hover:opacity-100"
+                    )}
                   >
                     {img}
                   </div>

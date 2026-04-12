@@ -9,6 +9,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { AnimatedSection, AnimatedDiv } from "@/components/animated-section";
 import { SaveButton } from "@/components/save-button";
+import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = {
   title: "LocalSpot — Anunțuri gratuite în România",
@@ -177,7 +178,10 @@ export default function HomePage() {
                 href={`/categories/${category.slug}`}
                 className="group"
               >
-                <div className={`flex flex-col items-center gap-2 rounded-xl ${category.color} p-4 transition-all hover:shadow-md hover:-translate-y-0.5`}>
+                <div className={cn(
+                  "flex flex-col items-center gap-2 rounded-xl p-4 transition-all hover:shadow-md hover:-translate-y-0.5",
+                  category.color
+                )}>
                   <span className="text-3xl">{category.icon}</span>
                   <span className="text-sm font-medium text-center text-foreground group-hover:text-secondary transition-colors">
                     {category.name}
