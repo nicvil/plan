@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
@@ -25,6 +25,14 @@ import {
 import { Separator } from "@/components/ui/separator";
 
 export default function SignInPage() {
+  return (
+    <Suspense fallback={<div className="w-full max-w-md h-96 animate-pulse bg-muted rounded-xl" />}>
+      <SignInForm />
+    </Suspense>
+  );
+}
+
+function SignInForm() {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/";
   const errorParam = searchParams.get("error");
@@ -58,12 +66,12 @@ export default function SignInPage() {
       });
 
       if (result?.error) {
-        setError("Invalid email or password. Please try again.");
+        setError("Email sau parolă incorectă. Încearcă din nou.");
       } else if (result?.url) {
         window.location.href = result.url;
       }
     } catch {
-      setError("Something went wrong. Please try again.");
+      setError("Ceva nu a funcționat. Te rugăm să încerci din nou.");
     } finally {
       setIsLoading(false);
     }
@@ -74,7 +82,7 @@ export default function SignInPage() {
     try {
       await signIn("google", { callbackUrl });
     } catch {
-      setError("Something went wrong with Google sign in.");
+      setError("Ceva nu a funcționat cu autentificarea Google.");
       setIsGoogleLoading(false);
     }
   }
@@ -86,13 +94,16 @@ export default function SignInPage() {
       transition={{ duration: 0.4, ease: "easeOut" }}
       className="w-full max-w-md"
     >
-      <Card>
+      <Card className="border-0 shadow-lg">
         <CardHeader className="text-center space-y-2">
-          <Link href="/" className="text-2xl font-bold text-primary mx-auto">
-            LocalSpot
+          <Link href="/" className="mx-auto flex items-center gap-1.5">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-secondary text-white font-bold text-sm">
+              LS
+            </div>
+            <span className="text-xl font-bold text-foreground">LocalSpot</span>
           </Link>
-          <CardTitle className="text-xl">Welcome Back</CardTitle>
-          <CardDescription>Sign in to your account</CardDescription>
+          <CardTitle className="text-xl">Bine ai revenit!</CardTitle>
+          <CardDescription>Conectează-te la contul tău</CardDescription>
         </CardHeader>
 
         <CardContent className="space-y-4">
@@ -130,7 +141,7 @@ export default function SignInPage() {
                 />
               </svg>
             )}
-            Sign in with Google
+            Continuă cu Google
           </Button>
 
           <div className="relative">
@@ -139,7 +150,7 @@ export default function SignInPage() {
             </div>
             <div className="relative flex justify-center text-xs uppercase">
               <span className="bg-card px-2 text-muted-foreground">
-                or continue with email
+                sau cu email
               </span>
             </div>
           </div>
@@ -152,7 +163,7 @@ export default function SignInPage() {
                 <Input
                   id="email"
                   type="email"
-                  placeholder="name@example.com"
+                  placeholder="nume@exemplu.com"
                   className={cn("pl-9", errors.email && "border-destructive")}
                   disabled={isLoading}
                   {...register("email")}
@@ -167,12 +178,12 @@ export default function SignInPage() {
 
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password">Parolă</Label>
                 <Link
                   href="/auth/forgot-password"
-                  className="text-xs text-muted-foreground hover:text-primary transition-colors"
+                  className="text-xs text-muted-foreground hover:text-secondary transition-colors"
                 >
-                  Forgot Password?
+                  Ai uitat parola?
                 </Link>
               </div>
               <div className="relative">
@@ -196,23 +207,23 @@ export default function SignInPage() {
               )}
             </div>
 
-            <Button type="submit" className="w-full" disabled={isLoading}>
+            <Button type="submit" className="w-full bg-secondary hover:bg-secondary/90 text-white" disabled={isLoading}>
               {isLoading && (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               )}
-              Sign In
+              Conectează-te
             </Button>
           </form>
         </CardContent>
 
         <CardFooter className="justify-center">
           <p className="text-sm text-muted-foreground">
-            Don&apos;t have an account?{" "}
+            Nu ai cont?{" "}
             <Link
               href="/auth/signup"
-              className="font-medium text-primary hover:underline"
+              className="font-medium text-secondary hover:underline"
             >
-              Sign Up
+              Creează cont
             </Link>
           </p>
         </CardFooter>

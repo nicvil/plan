@@ -21,9 +21,9 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "LocalSpot - Discover Local Businesses",
+  title: "LocalSpot — Anunțuri gratuite în România",
   description:
-    "Discover and support the best local businesses in your community. Find restaurants, shops, services, events, and more near you.",
+    "Cumpără și vinde rapid pe LocalSpot. Anunțuri gratuite de la particulari și firme. Auto, imobiliare, electronice, locuri de muncă și multe altele.",
 };
 
 export default function RootLayout({

@@ -1,139 +1,159 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { ChevronRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
 
 export const metadata: Metadata = {
-  title: "Browse Categories - LocalSpot",
+  title: "Categorii — LocalSpot",
   description:
-    "Browse local business categories. Find restaurants, retail shops, health services, and more in your community.",
+    "Răsfoiește toate categoriile de anunțuri pe LocalSpot. Auto, imobiliare, electronice, locuri de muncă și multe altele.",
 };
 
 const categories = [
   {
-    name: "Restaurants & Cafés",
-    slug: "restaurants",
-    emoji: "🍽️",
-    count: 142,
-    description:
-      "From cozy cafés to fine dining, discover the best local eateries near you.",
-  },
-  {
-    name: "Retail & Shopping",
-    slug: "retail",
-    emoji: "🛍️",
-    count: 98,
-    description:
-      "Unique boutiques, bookstores, and specialty shops run by local owners.",
-  },
-  {
-    name: "Health & Wellness",
-    slug: "health-wellness",
-    emoji: "💆",
-    count: 76,
-    description:
-      "Gyms, spas, yoga studios, and holistic wellness providers nearby.",
-  },
-  {
-    name: "Home Services",
-    slug: "home-services",
-    emoji: "🔧",
-    count: 64,
-    description:
-      "Trusted plumbers, electricians, cleaners, and home improvement pros.",
-  },
-  {
-    name: "Arts & Entertainment",
-    slug: "arts-entertainment",
-    emoji: "🎭",
-    count: 53,
-    description:
-      "Galleries, theaters, music venues, and creative studios in your area.",
-  },
-  {
-    name: "Professional Services",
-    slug: "professional-services",
-    emoji: "💼",
-    count: 87,
-    description:
-      "Accountants, lawyers, consultants, and other professional service providers.",
-  },
-  {
-    name: "Beauty & Personal Care",
-    slug: "beauty",
-    emoji: "💇",
-    count: 69,
-    description:
-      "Salons, barbershops, nail studios, and skincare specialists.",
-  },
-  {
-    name: "Education & Tutoring",
-    slug: "education",
-    emoji: "📚",
-    count: 41,
-    description:
-      "Language schools, tutoring centers, and educational workshops.",
-  },
-  {
-    name: "Automotive",
-    slug: "automotive",
+    name: "Auto, Moto și Ambarcațiuni",
+    slug: "auto-moto",
     emoji: "🚗",
-    count: 35,
-    description:
-      "Auto repair shops, detailing services, and car dealerships.",
+    count: 45820,
+    subcategories: ["Autoturisme", "Autoutilitare", "Motociclete", "Piese auto", "Ambarcațiuni"],
   },
   {
-    name: "Pets & Animals",
-    slug: "pets",
+    name: "Imobiliare",
+    slug: "imobiliare",
+    emoji: "🏠",
+    count: 32100,
+    subcategories: ["Apartamente de vânzare", "Apartamente de închiriat", "Case", "Terenuri", "Spații comerciale"],
+  },
+  {
+    name: "Electronice și Electrocasnice",
+    slug: "electronice",
+    emoji: "📱",
+    count: 28450,
+    subcategories: ["Telefoane", "Laptopuri & PC", "TV & Audio", "Electrocasnice", "Camere foto"],
+  },
+  {
+    name: "Locuri de muncă",
+    slug: "locuri-de-munca",
+    emoji: "💼",
+    count: 15200,
+    subcategories: ["IT & Software", "Vânzări", "Construcții", "Transport", "HoReCa"],
+  },
+  {
+    name: "Modă și Frumusețe",
+    slug: "moda",
+    emoji: "👗",
+    count: 21300,
+    subcategories: ["Îmbrăcăminte femei", "Îmbrăcăminte bărbați", "Încălțăminte", "Accesorii", "Cosmetice"],
+  },
+  {
+    name: "Casă și Grădină",
+    slug: "casa-gradina",
+    emoji: "🏡",
+    count: 18700,
+    subcategories: ["Mobilier", "Decorațiuni", "Unelte", "Materiale construcții", "Grădinărit"],
+  },
+  {
+    name: "Sport, Timp liber, Artă",
+    slug: "sport-timp-liber",
+    emoji: "⚽",
+    count: 9850,
+    subcategories: ["Echipament sportiv", "Biciclete", "Cărți & Reviste", "Instrumente muzicale", "Colecții"],
+  },
+  {
+    name: "Animale de companie",
+    slug: "animale",
     emoji: "🐾",
-    count: 28,
-    description:
-      "Veterinarians, pet grooming, boarding, and pet supply stores.",
+    count: 6200,
+    subcategories: ["Câini", "Pisici", "Accesorii animale", "Hrană animale", "Alte animale"],
+  },
+  {
+    name: "Servicii, Afaceri, Echipamente",
+    slug: "servicii",
+    emoji: "🔧",
+    count: 12400,
+    subcategories: ["Reparații", "Transporturi", "Servicii IT", "Servicii auto", "Cursuri"],
+  },
+  {
+    name: "Agro și Industrie",
+    slug: "agro-industrie",
+    emoji: "🌾",
+    count: 4300,
+    subcategories: ["Utilaje agricole", "Animale de fermă", "Produse agricole", "Echipamente industriale"],
+  },
+  {
+    name: "Mama și Copilul",
+    slug: "mama-copilul",
+    emoji: "👶",
+    count: 7600,
+    subcategories: ["Îmbrăcăminte copii", "Jucării", "Cărucioare", "Articole bebeluși", "Mobilier copii"],
+  },
+  {
+    name: "Turism și Cazare",
+    slug: "turism",
+    emoji: "✈️",
+    count: 3100,
+    subcategories: ["Cazare", "Vacanțe", "Bilete avion", "Închirieri auto", "Turism rural"],
   },
 ];
 
 export default function CategoriesPage() {
   return (
-    <div className="container mx-auto px-4 py-12">
-      <div className="mb-10 text-center">
-        <h1 className="text-4xl font-bold tracking-tight">
-          Browse Categories
+    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+      <div className="mb-8">
+        <h1 className="text-2xl font-bold tracking-tight">
+          Toate categoriile
         </h1>
-        <p className="mt-3 text-lg text-muted-foreground">
-          Explore local businesses by category and find exactly what you need.
+        <p className="mt-1 text-muted-foreground">
+          Alege o categorie pentru a vedea anunțurile disponibile
         </p>
       </div>
 
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {categories.map((category) => (
-          <Link
+          <div
             key={category.slug}
-            href={`/categories/${category.slug}`}
-            className="group block"
+            className="rounded-xl border bg-white p-5 transition-shadow hover:shadow-md"
           >
-            <Card className="h-full transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
-              <CardHeader>
-                <div className="mb-2 text-4xl">{category.emoji}</div>
-                <CardTitle className="text-lg group-hover:text-primary">
+            {/* Category header */}
+            <Link
+              href={`/categories/${category.slug}`}
+              className="flex items-center gap-3 group mb-3"
+            >
+              <span className="flex h-12 w-12 items-center justify-center rounded-lg bg-muted text-2xl">
+                {category.emoji}
+              </span>
+              <div className="flex-1 min-w-0">
+                <h2 className="font-semibold text-foreground group-hover:text-secondary transition-colors">
                   {category.name}
-                </CardTitle>
-                <CardDescription>{category.description}</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Badge variant="secondary">
-                  {category.count} businesses
-                </Badge>
-              </CardContent>
-            </Card>
-          </Link>
+                </h2>
+                <p className="text-xs text-muted-foreground">
+                  {category.count.toLocaleString("ro-RO")} anunțuri
+                </p>
+              </div>
+              <ChevronRight className="h-5 w-5 text-muted-foreground group-hover:text-secondary transition-colors shrink-0" />
+            </Link>
+
+            {/* Subcategories */}
+            <div className="flex flex-wrap gap-1.5">
+              {category.subcategories.map((sub) => (
+                <Link
+                  key={sub}
+                  href={`/categories/${category.slug}`}
+                  className="inline-block"
+                >
+                  <Badge
+                    variant="outline"
+                    className="text-xs font-normal hover:bg-secondary/10 hover:text-secondary hover:border-secondary/30 transition-colors cursor-pointer"
+                  >
+                    {sub}
+                  </Badge>
+                </Link>
+              ))}
+            </div>
+          </div>
         ))}
       </div>
     </div>
   );
 }
+

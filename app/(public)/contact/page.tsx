@@ -1,133 +1,158 @@
 import type { Metadata } from "next";
-import { Mail, Phone, MapPin, Clock } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import { Mail, Phone, MapPin, Clock, MessageSquare, Shield, FileText } from "lucide-react";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Separator } from "@/components/ui/separator";
 import { ContactForm } from "@/components/contact-form";
 import { AnimatedSection, AnimatedDiv } from "@/components/animated-section";
 
 export const metadata: Metadata = {
-  title: "Contact Us | LocalSpot",
+  title: "Contact — LocalSpot",
   description:
-    "Get in touch with the LocalSpot team. We're here to help with business listings, support, partnerships, and more.",
+    "Contactează echipa LocalSpot. Suntem aici să te ajutăm cu orice întrebare despre anunțuri, cont sau platforma noastră.",
 };
 
 const contactInfo = [
   {
     icon: Mail,
     label: "Email",
-    value: "hello@localspot.com",
-    href: "mailto:hello@localspot.com",
+    value: "ajutor@localspot.ro",
+    href: "mailto:ajutor@localspot.ro",
   },
   {
     icon: Phone,
-    label: "Phone",
-    value: "(555) 123-4567",
-    href: "tel:+15551234567",
+    label: "Telefon",
+    value: "0800 800 800 (gratuit)",
+    href: "tel:+40800800800",
   },
   {
     icon: MapPin,
-    label: "Address",
-    value: "123 Main Street, Suite 200\nAnytown, USA 12345",
+    label: "Adresă",
+    value: "Str. Victoriei 42, București",
   },
   {
     icon: Clock,
-    label: "Business Hours",
-    value: "Mon–Fri: 9am – 6pm EST",
+    label: "Program",
+    value: "Luni–Vineri: 9:00 – 18:00",
   },
 ];
 
 const faqs = [
   {
-    question: "How do I list my business on LocalSpot?",
+    question: "Cum public un anunț pe LocalSpot?",
     answer:
-      "Getting started is easy! Simply create a free account, click 'Add Business' from your dashboard, and fill in your business details. Your listing will be reviewed and published within 24 hours.",
+      'Creează un cont gratuit, apasă pe "Adaugă anunț", completează detaliile produsului și publică-l. Anunțul va fi vizibil în câteva minute după verificarea automată.',
   },
   {
-    question: "Is there a free option for business owners?",
+    question: "Cât costă să postez un anunț?",
     answer:
-      "Yes! Our Free plan includes a basic business listing with one photo, inclusion in search results, and a dedicated business page. Upgrade anytime for more features.",
+      "Publicarea anunțurilor este gratuită. Poți opta pentru promovare plătită dacă vrei ca anunțul tău să fie mai vizibil și să ajungă la mai mulți utilizatori.",
   },
   {
-    question: "How long does it take for my listing to go live?",
+    question: "Cum îmi promovez anunțul?",
     answer:
-      "Most listings are reviewed and approved within 24 hours. Premium and Featured plan listings receive priority review and are typically live within a few hours.",
+      "Din pagina anunțului tău, poți selecta opțiunea de promovare. Oferim pachete de promovare care îți plasează anunțul în topul rezultatelor pentru mai multă vizibilitate.",
   },
   {
-    question: "Can I update my business listing after it's published?",
+    question: "Cum raportez un anunț suspicios?",
     answer:
-      "Absolutely! You can update your business information, photos, hours, and more at any time through your dashboard. Changes are reflected immediately.",
+      'Pe fiecare anunț găsești butonul "Raportează". Completează motivul raportării și echipa noastră va verifica anunțul în cel mai scurt timp.',
   },
   {
-    question: "How do I report an incorrect or fraudulent listing?",
+    question: "Cum îmi șterg contul?",
     answer:
-      "If you find inaccurate information or suspect a fraudulent listing, please use this contact form with the 'General Inquiry' subject, or email us directly. We take accuracy seriously and will investigate promptly.",
+      "Poți șterge contul din Setări > Cont > Șterge cont. Toate anunțurile și datele tale vor fi șterse permanent.",
   },
+  {
+    question: "Cum pot contacta un vânzător?",
+    answer:
+      'Din pagina anunțului, folosește butonul "Trimite mesaj" pentru a discuta prin chat-ul intern sau "Arată telefonul" dacă vânzătorul a activat această opțiune.',
+  },
+];
+
+const helpTopics = [
+  { icon: MessageSquare, label: "Chat live", description: "Vorbește cu un operator" },
+  { icon: Shield, label: "Siguranță", description: "Sfaturi pentru tranzacții sigure" },
+  { icon: FileText, label: "Ghiduri", description: "Cum să folosești platforma" },
 ];
 
 export default function ContactPage() {
   return (
     <div className="flex flex-col">
       {/* Hero */}
-      <AnimatedSection className="bg-gradient-to-b from-primary/5 to-background py-16 sm:py-24">
+      <section className="bg-primary text-primary-foreground py-12 sm:py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-2xl text-center">
-            <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
-              Get in <span className="text-primary">Touch</span>
+            <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
+              Cum te putem ajuta?
             </h1>
-            <p className="mt-4 text-lg text-muted-foreground">
-              Have a question, feedback, or partnership idea? We&apos;d love to
-              hear from you. Our team typically responds within 24 hours.
+            <p className="mt-3 text-primary-foreground/80">
+              Echipa noastră îți răspunde de obicei în mai puțin de 24 de ore.
             </p>
           </div>
         </div>
-      </AnimatedSection>
+      </section>
+
+      {/* Quick help topics */}
+      <section className="bg-white border-b py-8">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid gap-4 sm:grid-cols-3">
+            {helpTopics.map((topic) => (
+              <div
+                key={topic.label}
+                className="flex items-center gap-4 rounded-xl border p-4 hover:shadow-md transition-shadow cursor-pointer"
+              >
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-secondary/10">
+                  <topic.icon className="h-5 w-5 text-secondary" />
+                </div>
+                <div>
+                  <p className="font-medium">{topic.label}</p>
+                  <p className="text-sm text-muted-foreground">{topic.description}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* Contact Form + Info */}
-      <AnimatedSection className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        <div className="grid gap-12 lg:grid-cols-3">
+      <AnimatedSection className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+        <div className="grid gap-10 lg:grid-cols-3">
           {/* Form */}
           <div className="lg:col-span-2">
-            <h2 className="text-2xl font-bold">Send Us a Message</h2>
-            <Separator className="my-4 w-16 bg-secondary" />
+            <h2 className="text-xl font-bold mb-1">Trimite-ne un mesaj</h2>
+            <p className="text-sm text-muted-foreground mb-5">
+              Completează formularul și te vom contacta cât de curând.
+            </p>
             <ContactForm />
           </div>
 
           {/* Sidebar */}
-          <div className="space-y-6">
-            <h2 className="text-2xl font-bold">Contact Info</h2>
-            <Separator className="w-16 bg-secondary" />
+          <div className="space-y-4">
+            <h2 className="text-xl font-bold mb-1">Informații de contact</h2>
             {contactInfo.map((item, index) => (
               <AnimatedDiv key={item.label} delay={index * 0.1}>
-                <Card>
-                  <CardContent className="flex items-start gap-4 pt-6">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10">
-                      <item.icon className="h-5 w-5 text-primary" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-muted-foreground">
-                        {item.label}
-                      </p>
-                      {item.href ? (
-                        <a
-                          href={item.href}
-                          className="font-medium text-foreground transition-colors hover:text-primary"
-                        >
-                          {item.value}
-                        </a>
-                      ) : (
-                        <p className="whitespace-pre-line font-medium">
-                          {item.value}
-                        </p>
-                      )}
-                    </div>
-                  </CardContent>
-                </Card>
+                <div className="flex items-start gap-3 rounded-xl border bg-white p-4">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-secondary/10">
+                    <item.icon className="h-4 w-4 text-secondary" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-muted-foreground">{item.label}</p>
+                    {item.href ? (
+                      <a
+                        href={item.href}
+                        className="text-sm font-medium text-foreground transition-colors hover:text-secondary"
+                      >
+                        {item.value}
+                      </a>
+                    ) : (
+                      <p className="text-sm font-medium">{item.value}</p>
+                    )}
+                  </div>
+                </div>
               </AnimatedDiv>
             ))}
           </div>
@@ -135,32 +160,28 @@ export default function ContactPage() {
       </AnimatedSection>
 
       {/* FAQ Section */}
-      <AnimatedSection className="bg-muted/50 py-20">
+      <section className="bg-white border-t py-14">
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h2 className="text-3xl font-bold tracking-tight">
-              Frequently Asked Questions
-            </h2>
-            <p className="mt-2 text-muted-foreground">
-              Quick answers to the questions we hear most
+          <div className="text-center mb-8">
+            <h2 className="text-2xl font-bold">Întrebări frecvente</h2>
+            <p className="mt-1 text-muted-foreground">
+              Răspunsuri rapide la cele mai comune întrebări
             </p>
           </div>
-          <div className="mt-10">
-            <Accordion type="single" collapsible className="w-full">
-              {faqs.map((faq, index) => (
-                <AccordionItem key={index} value={`faq-${index}`}>
-                  <AccordionTrigger className="text-left">
-                    {faq.question}
-                  </AccordionTrigger>
-                  <AccordionContent className="text-muted-foreground">
-                    {faq.answer}
-                  </AccordionContent>
-                </AccordionItem>
-              ))}
-            </Accordion>
-          </div>
+          <Accordion type="single" collapsible className="w-full">
+            {faqs.map((faq, index) => (
+              <AccordionItem key={index} value={`faq-${index}`}>
+                <AccordionTrigger className="text-left text-sm">
+                  {faq.question}
+                </AccordionTrigger>
+                <AccordionContent className="text-muted-foreground text-sm">
+                  {faq.answer}
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
         </div>
-      </AnimatedSection>
+      </section>
     </div>
   );
 }

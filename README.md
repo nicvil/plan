@@ -1,275 +1,220 @@
-# 🏡 LocalSpot — Discover & Support Local Businesses
+# 🏪 LocalSpot — Platformă de anunțuri gratuite (OLX-style)
 
-A modern, production-ready local business discovery platform built with Next.js 14, Tailwind CSS, Prisma, and shadcn/ui. Users can browse, search, review, and save local businesses while business owners can claim and manage their listings.
+O platformă modernă de anunțuri locale, inspirată de OLX.ro, construită cu Next.js 14, Tailwind CSS, Prisma și shadcn/ui. Utilizatorii pot posta anunțuri gratuite, căuta produse și servicii, salva favorite și contacta vânzători.
 
 ## Screenshots
 
-### Home Page
-![Home Page](https://github.com/user-attachments/assets/940c50e8-54cd-4e98-a53f-29b5e781d8c5)
+### Pagina principală
+![Home Page](https://github.com/user-attachments/assets/55b97ad9-2dd9-49c6-bdf0-5f4eb12a149d)
 
-### Business Listings
-![Businesses Page](https://github.com/user-attachments/assets/55b97ad9-2dd9-49c6-bdf0-5f4eb12a149d)
-
-### Categories
+### Categorii
 ![Categories Page](https://github.com/user-attachments/assets/9fe6d5ed-7d28-4aae-b464-cff6184f0a1b)
 
-### Pricing
-![Pricing Page](https://github.com/user-attachments/assets/11163850-bfdd-413a-b57b-6b686bad8a6b)
+### Detaliu anunț
+![Listing Detail](https://github.com/user-attachments/assets/11163850-bfdd-413a-b57b-6b686bad8a6b)
 
-### Sign In
+### Autentificare
 ![Sign In Page](https://github.com/user-attachments/assets/259842b5-6284-4024-adce-25b2b7356fb6)
 
 ---
 
-## Tech Stack
+## Tehnologii folosite
 
-| Layer | Technology |
+| Layer | Tehnologie |
 |-------|-----------|
 | Framework | Next.js 14 (App Router) |
-| Language | TypeScript (strict mode) |
+| Limbaj | TypeScript (strict mode) |
 | Styling | Tailwind CSS + shadcn/ui |
-| Animations | Framer Motion |
-| Database | PostgreSQL via Prisma ORM |
-| Auth | NextAuth.js (Google OAuth + Credentials) |
-| Payments | Stripe |
-| Forms | React Hook Form + Zod |
-| State | Zustand |
-| Icons | Lucide React |
+| Animații | Framer Motion |
+| Bază de date | PostgreSQL via Prisma ORM |
+| Autentificare | NextAuth.js (Google OAuth + Email/Parolă) |
+| Plăți | Stripe |
+| Formulare | React Hook Form + Zod |
+| State Management | Zustand |
+| Iconițe | Lucide React |
 
 ---
 
-## Prerequisites
+## Cerințe
 
-Before running the project, make sure you have the following installed:
-
-- **Node.js** ≥ 18.x — [Download](https://nodejs.org/)
-- **npm** ≥ 9.x (comes with Node.js)
-- **PostgreSQL** ≥ 14.x — [Download](https://www.postgresql.org/download/) *(optional for browsing UI only)*
+- **Node.js** ≥ 18.x — [Descarcă](https://nodejs.org/)
+- **npm** ≥ 9.x (vine cu Node.js)
+- **PostgreSQL** ≥ 14.x — [Descarcă](https://www.postgresql.org/download/) *(opțional, doar pentru funcționalități backend)*
 
 ---
 
-## Getting Started
+## Cum rulezi proiectul
 
-### 1. Clone the repository
+### 1. Clonează repository-ul
 
 ```bash
 git clone https://github.com/nicvil/plan.git
 cd plan
 ```
 
-### 2. Install dependencies
+### 2. Instalează dependențele
 
 ```bash
 npm install
 ```
 
-### 3. Set up environment variables
-
-Copy the example environment file and fill in your values:
+### 3. Configurează variabilele de mediu
 
 ```bash
 cp .env.example .env
 ```
 
-Edit `.env` with your configuration:
+Editează `.env` cu valorile tale:
 
 ```env
-# ─── Database ──────────────────────────────────────────────────────────────
-DATABASE_URL="postgresql://user:password@localhost:5432/local_business_spotlight"
+# Bază de date
+DATABASE_URL="postgresql://user:password@localhost:5432/localspot"
 
-# ─── NextAuth ──────────────────────────────────────────────────────────────
+# NextAuth
 NEXTAUTH_URL="http://localhost:3000"
-NEXTAUTH_SECRET="generate-a-random-secret-here"
+NEXTAUTH_SECRET="genereaza-un-secret-random"
 
-# ─── Google OAuth ──────────────────────────────────────────────────────────
-GOOGLE_CLIENT_ID="your-google-client-id"
-GOOGLE_CLIENT_SECRET="your-google-client-secret"
+# Google OAuth (opțional)
+GOOGLE_CLIENT_ID="id-ul-tau-google"
+GOOGLE_CLIENT_SECRET="secret-ul-tau-google"
 
-# ─── Stripe ────────────────────────────────────────────────────────────────
+# Stripe (opțional)
 STRIPE_SECRET_KEY="sk_test_..."
 STRIPE_PUBLISHABLE_KEY="pk_test_..."
-STRIPE_WEBHOOK_SECRET="whsec_..."
 
-# ─── App ───────────────────────────────────────────────────────────────────
+# App
 NEXT_PUBLIC_APP_URL="http://localhost:3000"
-
-# ─── Google Maps ───────────────────────────────────────────────────────────
-NEXT_PUBLIC_GOOGLE_MAPS_API_KEY="your-google-maps-api-key"
-
-# ─── Email (Resend) ───────────────────────────────────────────────────────
-RESEND_API_KEY="re_..."
-
-# ─── Cloudinary ────────────────────────────────────────────────────────────
-CLOUDINARY_URL="cloudinary://api_key:api_secret@cloud_name"
-
-# ─── Algolia ──────────────────────────────────────────────────────────────
-ALGOLIA_APP_ID="your-algolia-app-id"
-ALGOLIA_API_KEY="your-algolia-api-key"
 ```
 
-> **Tip:** You can generate a NextAuth secret with: `openssl rand -base64 32`
+> **Notă:** Aplicația funcționează și afișează toate paginile cu date placeholder chiar și fără a configura servicii externe. Baza de date, OAuth și Stripe sunt necesare doar pentru funcționalitatea completă.
 
-> **Note:** The app will run and display all pages with placeholder data even without configuring external services. Database, OAuth, Stripe, and other integrations are only needed for full functionality.
-
-### 4. Set up the database *(optional — only needed for backend features)*
-
-Create the PostgreSQL database and run Prisma migrations:
+### 4. Configurează baza de date *(opțional)*
 
 ```bash
-# Create the database
-createdb local_business_spotlight
-
-# Generate Prisma client
+# Generează clientul Prisma
 npx prisma generate
 
-# Push the schema to your database
+# Aplică schema în baza de date
 npx prisma db push
 ```
 
-### 5. Run the development server
+### 5. Pornește serverul de dezvoltare
 
 ```bash
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser to see the app.
+Deschide [http://localhost:3000](http://localhost:3000) în browser.
 
 ---
 
-## Available Scripts
+## Comenzi disponibile
 
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Start the development server on port 3000 |
-| `npm run build` | Create an optimized production build |
-| `npm start` | Run the production build |
-| `npm run lint` | Run ESLint to check for code issues |
-| `npx prisma studio` | Open Prisma Studio to browse your database |
-| `npx prisma generate` | Regenerate the Prisma client after schema changes |
-| `npx prisma db push` | Push schema changes to the database |
+| Comandă | Descriere |
+|---------|-----------|
+| `npm run dev` | Pornește serverul de dezvoltare pe port 3000 |
+| `npm run build` | Creează un build optimizat de producție |
+| `npm start` | Rulează build-ul de producție |
+| `npm run lint` | Verifică codul cu ESLint |
+| `npx prisma studio` | Deschide Prisma Studio pentru a naviga baza de date |
+| `npx prisma generate` | Regenerează clientul Prisma |
+| `npx prisma db push` | Aplică schema în baza de date |
 
 ---
 
-## Project Structure
+## Structura proiectului
 
 ```
 ├── app/
-│   ├── (public)/          # Public pages (home, businesses, categories, etc.)
-│   │   ├── page.tsx       # Home page
-│   │   ├── businesses/    # Business listing & detail pages
-│   │   ├── categories/    # Category listing & detail pages
-│   │   ├── events/        # Events page
-│   │   ├── blog/          # Blog listing & post pages
-│   │   ├── search/        # Search results page
-│   │   ├── about/         # About page
-│   │   ├── contact/       # Contact page
-│   │   └── pricing/       # Pricing page
-│   ├── (auth)/            # Authentication pages
-│   │   └── auth/          # Sign in, sign up, forgot password, verify email
-│   ├── (dashboard)/       # User & business owner dashboard
-│   │   └── dashboard/     # Overview, saved, reviews, settings, business mgmt
-│   ├── (admin)/           # Admin dashboard
-│   │   └── admin/         # Businesses, users, reviews, categories management
+│   ├── (public)/          # Pagini publice
+│   │   ├── page.tsx       # Pagina principală (categorii, anunțuri promovate/recente)
+│   │   ├── businesses/    # Lista anunțuri & detaliu anunț
+│   │   ├── categories/    # Categorii cu subcategorii
+│   │   ├── events/        # Evenimente locale
+│   │   ├── search/        # Rezultate căutare
+│   │   ├── about/         # Despre platformă
+│   │   ├── contact/       # Formular contact + FAQ
+│   │   └── pricing/       # Pachete de promovare
+│   ├── (auth)/            # Pagini de autentificare
+│   │   └── auth/          # Conectare, înregistrare, resetare parolă
+│   ├── (dashboard)/       # Dashboard utilizator & business
+│   │   └── dashboard/     # Contul meu, favorite, recenzii, setări
+│   ├── (admin)/           # Panou administrare
+│   │   └── admin/         # Gestionare anunțuri, utilizatori, recenzii
 │   ├── api/               # API route handlers
-│   ├── layout.tsx         # Root layout with header, footer, providers
-│   └── globals.css        # Global styles & CSS custom properties
+│   ├── layout.tsx         # Layout root cu header, footer, providers
+│   └── globals.css        # Stiluri globale & variabile CSS
 ├── components/
-│   ├── ui/                # shadcn/ui components (button, card, badge, etc.)
+│   ├── ui/                # Componente shadcn/ui
 │   ├── layout/            # Header, footer, mobile nav, breadcrumbs, search
-│   ├── business/          # Business card, star rating components
-│   └── providers.tsx      # SessionProvider wrapper
+│   ├── business/          # Componente specifice anunțuri
+│   └── save-button.tsx    # Buton salvare favori
 ├── lib/
 │   ├── prisma.ts          # Prisma client singleton
-│   ├── auth.ts            # NextAuth configuration
-│   ├── stripe.ts          # Stripe client & plan definitions
-│   ├── utils.ts           # Utility functions (cn, formatDate, etc.)
-│   └── validations.ts     # Zod schemas for forms
+│   ├── auth.ts            # Configurare NextAuth
+│   ├── stripe.ts          # Client Stripe & planuri
+│   ├── utils.ts           # Funcții utilitare
+│   └── validations.ts     # Scheme Zod pentru formulare
 ├── stores/
-│   └── business-store.ts  # Zustand store for business filters
-├── types/
-│   └── index.ts           # TypeScript types & next-auth augmentation
+│   └── business-store.ts  # Zustand store pentru filtre
 ├── prisma/
-│   └── schema.prisma      # Database schema (12 models, 4 enums)
-├── .env.example           # Environment variable template
-├── tailwind.config.ts     # Tailwind + design system configuration
-├── tsconfig.json          # TypeScript configuration
-└── next.config.mjs        # Next.js configuration
+│   └── schema.prisma      # Schema bazei de date
+├── .env.example           # Template variabile de mediu
+└── tailwind.config.ts     # Configurare Tailwind
 ```
 
 ---
 
-## Pages Overview
+## Pagini disponibile
 
-### Public Pages
-- **/** — Home page with hero, featured businesses, category grid, impact stats
-- **/businesses** — Business listing with search, filters, and grid/list view
-- **/businesses/[slug]** — Business detail with tabs (Overview, Photos, Reviews, Events)
-- **/categories** — Browse all business categories
-- **/categories/[slug]** — Businesses filtered by category
-- **/events** — Local events listing
-- **/blog** — Blog posts and city guides
-- **/blog/[slug]** — Individual blog post
-- **/search** — Unified search results
-- **/about** — About the platform
-- **/contact** — Contact form with FAQ
-- **/pricing** — 4-tier pricing plans (Free, Basic, Premium, Featured)
+### Pagini publice
+- **/** — Pagina principală cu categorii, anunțuri promovate și recente
+- **/businesses** — Lista anunțurilor cu căutare, filtre și grid/list view
+- **/businesses/[slug]** — Detaliu anunț cu galerie foto, info vânzător, anunțuri similare
+- **/categories** — Toate categoriile cu subcategorii
+- **/categories/[slug]** — Anunțuri filtrate pe categorie
+- **/events** — Evenimente locale
+- **/search** — Rezultate căutare
+- **/about** — Despre LocalSpot
+- **/contact** — Formular contact + întrebări frecvente
+- **/pricing** — Pachete de promovare anunțuri
 
-### Auth Pages
-- **/auth/signin** — Sign in with Google or email/password
-- **/auth/signup** — Create a new account
-- **/auth/forgot-password** — Password reset request
-- **/auth/verify-email** — Email verification
+### Autentificare
+- **/auth/signin** — Conectare cu Google sau email/parolă
+- **/auth/signup** — Creează cont nou
+- **/auth/forgot-password** — Resetare parolă
+- **/auth/verify-email** — Verificare email
 
-### Dashboard Pages
-- **/dashboard** — User overview (saved businesses, reviews, activity)
-- **/dashboard/saved** — Bookmarked businesses
-- **/dashboard/reviews** — Review history
-- **/dashboard/settings** — Profile & notification settings
-- **/dashboard/business** — Business owner dashboard (stats, management)
-- **/dashboard/business/edit** — Edit business listing
-- **/dashboard/business/reviews** — Manage reviews & replies
-- **/dashboard/business/analytics** — Business analytics
-- **/dashboard/business/billing** — Plan & billing management
+### Dashboard
+- **/dashboard** — Prezentare generală cont
+- **/dashboard/saved** — Anunțuri favorite
+- **/dashboard/reviews** — Istoric recenzii
+- **/dashboard/settings** — Setări profil
+- **/dashboard/business** — Dashboard vânzător
+- **/dashboard/business/analytics** — Analiză anunțuri
 
-### Admin Pages
-- **/admin** — Admin overview with stats
-- **/admin/businesses** — Manage all business listings
-- **/admin/users** — Manage users & roles
-- **/admin/reviews** — Moderate reviews
+### Administrare
+- **/admin** — Panou administrare
+- **/admin/businesses** — Gestionare anunțuri
+- **/admin/users** — Gestionare utilizatori
+- **/admin/reviews** — Moderare recenzii
 
 ---
 
-## Design System
+## Design inspirat de OLX.ro
 
-| Token | Value | Usage |
-|-------|-------|-------|
-| Primary | `#1E3A5F` (Navy Blue) | Buttons, links, header |
-| Secondary | `#F59E0B` (Amber) | Highlights, accents |
-| Accent | `#FF6B6B` (Coral) | CTAs, featured badges |
-| Success | `#10B981` (Emerald) | Verified badges, success states |
-| Background | `#FAFAFA` | Page background |
-| Text | `#1E293B` / `#64748B` | Primary / secondary text |
-
----
-
-## Deployment
-
-### Deploy to Vercel
-
-1. Push the repo to GitHub
-2. Import the project in [Vercel](https://vercel.com/new)
-3. Configure environment variables in the Vercel dashboard
-4. Deploy — Vercel handles builds and CDN automatically
-
-### Environment Variables for Production
-
-Set all variables from `.env.example` in your Vercel project settings. Make sure to update:
-- `NEXTAUTH_URL` → your production domain
-- `NEXT_PUBLIC_APP_URL` → your production domain
-- `DATABASE_URL` → your production PostgreSQL connection string (e.g., Supabase)
+| Element | Stil |
+|---------|------|
+| Header | Dark, cu search bar integrat, selector locație, buton "Adaugă anunț" |
+| Culoare principală | Dark (#2B2D42) |
+| Culoare accent | Teal (#2DBEAD) |
+| Culoare promoții | Amber (#F59E0B) |
+| Card-uri anunțuri | Imagine + preț + titlu + locație + data |
+| Categorii | Grid cu icon-uri, badge-uri subcategorii |
+| Footer | Dark, minimal, cu link-uri rapide |
 
 ---
 
-## License
+## Licență
 
-This project is private and proprietary.
+Proiect privat.

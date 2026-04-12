@@ -4,35 +4,39 @@
 
 @layer base {
   :root {
-    --background: 0 0% 98%;
-    --foreground: 217 33% 17%;
+    /* OLX-inspired clean white + dark theme */
+    --background: 0 0% 97%;
+    --foreground: 220 13% 18%;
 
     --card: 0 0% 100%;
-    --card-foreground: 217 33% 17%;
+    --card-foreground: 220 13% 18%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 217 33% 17%;
+    --popover-foreground: 220 13% 18%;
 
-    --primary: 214 52% 25%;
+    /* OLX dark header / primary actions */
+    --primary: 220 13% 18%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 38 92% 50%;
-    --secondary-foreground: 217 33% 17%;
+    /* OLX teal accent for CTAs */
+    --secondary: 174 62% 47%;
+    --secondary-foreground: 0 0% 100%;
 
-    --muted: 210 40% 96%;
-    --muted-foreground: 215 16% 47%;
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 9% 46%;
 
-    --accent: 0 100% 71%;
+    /* Accent for promoted/featured items */
+    --accent: 38 92% 50%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 214 32% 91%;
-    --input: 214 32% 91%;
-    --ring: 214 52% 25%;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 174 62% 47%;
 
-    --radius: 0.75rem;
+    --radius: 0.5rem;
 
     --success: 160 84% 39%;
     --success-foreground: 0 0% 100%;
